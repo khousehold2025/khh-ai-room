@@ -9,10 +9,34 @@ export const maxDuration = 60;
 
 export async function POST(req: Request) {
   try {
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(
-      process.cwd(),
-      "vertex-key.json"
-    );
+
+
+
+const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
+const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+
+if (clientEmail && privateKey) {
+  const credentialsPath = path.join("/tmp", "google-credentials.json");
+
+  fs.writeFileSync(
+    credentialsPath,
+    JSON.stringify({
+      type: "service_account",
+      project_id: projectId,
+      client_email: clientEmail,
+      private_key: privateKey,
+    })
+  );
+
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = credentialsPath;
+} else {
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(
+    process.cwd(),
+    "vertex-key.json"
+  );
+}
+
+
 
     const formData = await req.formData();
 
