@@ -1,0 +1,32 @@
+[
+  {
+    "id": "sofa01",
+    "name": "모튼 3인용 가죽소파",
+    "size": "3인용",
+    "color": "브라운",
+    "width": 1840,
+    "depth": 750,
+    "height": 850,
+    "image": "/sofas/sofa01.png"
+  },
+  {
+    "id": "sofa02",
+    "name": "켄지4인카우치 실리콘가죽 모듈소파",
+    "size": "4인용",
+    "color": "카멜",
+    "width": 2200,
+    "depth": 950,
+    "height": 820,
+    "image": "/sofas/sofa02.png"
+  },
+  {
+    "id": "sofa03",
+    "name": "클라우드 1인용+2인용 패브릭소파",
+    "size": "3인용",
+    "color": "아이보리",
+    "width": 2250,
+    "depth": 850,
+    "height": 700,
+    "image": "/sofas/sofa03.png"
+  }
+]

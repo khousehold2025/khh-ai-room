@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.env.local
+vertex-key.json
+node_modules
+.next
+output_files
+app/page - *.tsx
+
