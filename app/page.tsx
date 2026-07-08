@@ -10,7 +10,7 @@ export default function Home() {
   const [roomImage, setRoomImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  const [material, setMaterial] = useState("fabric");
+  const [material, setMaterial] = useState("original");
   const [color, setColor] = useState("original");
   const [lighting, setLighting] = useState("natural");
 
@@ -20,6 +20,12 @@ export default function Home() {
   const [advice, setAdvice] = useState("");
 
   const materialOptions = [
+  {
+      id: "original",
+      title: "원본원단",
+      description: "제품 이미지의 원래 원단과 질감을 최대한 유지합니다.",
+    },
+
     {
       id: "fabric",
       title: "패브릭",

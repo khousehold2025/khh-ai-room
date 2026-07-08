@@ -99,29 +99,9 @@ export async function POST(req: Request) {
     const roomBase64 = roomBuffer.toString("base64");
     const sofaBase64 = sofaBuffer.toString("base64");
 
-const materialText =
-  material === "original"
-    ? `
-Selected sofa material: Original material.
-
-Keep the sofa's original upholstery exactly as shown in the product image.
-
-DO NOT change:
-- upholstery
-- fabric
-- leather
-- material
-- texture
-- grain
-- finish
-- stitching
-- seams
-
-The sofa must preserve its original material exactly.
-Only adjust lighting and color naturally according to the selected environment.
-`
-    : material === "silicone"
-    ? `
+    const materialText =
+      material === "silicone"
+        ? `
 Selected sofa material: Silicone leather.
 
 Apply a smooth, clean, slightly refined leather-like surface.
@@ -129,8 +109,8 @@ The sofa should look easy to clean, modern, and slightly sleek.
 Keep the original sofa structure, cushion shape, armrests, legs, seams, and proportions.
 Only change the material impression to silicone leather.
 `
-    : material === "natural_leather"
-    ? `
+        : material === "natural_leather"
+        ? `
 Selected sofa material: Natural leather.
 
 Apply a premium natural leather surface with subtle grain, depth, and soft highlights.
@@ -138,7 +118,7 @@ The sofa should look luxurious, durable, and high-end.
 Keep the original sofa structure, cushion shape, armrests, legs, seams, and proportions.
 Only change the material impression to natural leather.
 `
-    : `
+        : `
 Selected sofa material: Fabric.
 
 Apply a soft woven fabric texture with a warm and cozy appearance.
