@@ -28,5 +28,55 @@
     "depth": 850,
     "height": 700,
     "image": "/sofas/sofa03.png"
+  },
+  {
+    "id": "sofa04",
+    "name": "오드4인 실리콘가죽 유광",
+    "size": "4인용",
+    "color": "블랙(유광)",
+    "width": 2800,
+    "depth": 940,
+    "height": 750,
+    "image": "/sofas/sofa04.png"
+  },  
+{
+    "id": "sofa05",
+    "name": "멕소4인 천연면피가죽",
+    "size": "4인용",
+    "color": "카멜",
+    "width": 2600,
+    "depth": 800,
+    "height": 930,
+    "image": "/sofas/sofa05.png"
+  },
+{
+    "id": "sofa06",
+    "name": "무에나3 패브릭",
+    "size": "3인용",
+    "color": "아이보리",
+    "width": 2060,
+    "depth": 1030,
+    "height": 850,
+    "image": "/sofas/sofa06.png"
+  },
+{
+    "id": "sofa07",
+    "name": "카든3 천연면피가죽",
+    "size": "3인용",
+    "color": "그레이",
+    "width": 2300,
+    "depth": 1020,
+    "height": 940,
+    "image": "/sofas/sofa07.png"
+  },
+{
+    "id": "sofa08",
+    "name": "카든4 천연면피가죽",
+    "size": "4인용",
+    "color": "그레이",
+    "width": 3000,
+    "depth": 1020,
+    "height": 940,
+    "image": "/sofas/sofa08.png"
   }
 ]
