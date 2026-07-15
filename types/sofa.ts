@@ -16,4 +16,6 @@ export interface Sofa {
 
   image: string;
 
+active?: boolean;
+
 }

@@ -48,3 +48,4 @@ output_files
 app/page - *.tsx
 public/sofas/bk/
 
+firebase/

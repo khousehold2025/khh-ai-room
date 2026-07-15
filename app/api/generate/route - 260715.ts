@@ -9,12 +9,273 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 /**
- * 원단별 고정 프롬프트 삭제
+ * 원단별 고정 프롬프트
  */
+const MATERIAL_PROMPTS: Record<string, string> = {
+  original: `
+Preserve the sofa's original upholstery material exactly as shown in the product image.
+
+Do not change:
+- the original material type
+- fabric or leather texture
+- surface grain
+- gloss level
+- stitching
+- seams
+- upholstery finish
+
+The sofa must retain its original upholstery identity.
+`,
+
+  fabric: `
+Change the sofa upholstery to premium woven fabric.
+
+Material characteristics:
+- soft woven textile texture
+- refined and dense fabric weave
+- matte surface with minimal reflections
+- warm, comfortable, and cozy appearance
+- realistic upholstery fabric suitable for a premium sofa
+
+Preserve the original sofa structure, cushions, seams, stitching, armrests,
+legs, proportions, and product design.
+Only change the upholstery material impression.
+`,
+
+  silicone: `
+Change the sofa upholstery to premium matte silicone leather.
+
+Material characteristics:
+- smooth and clean silicone leather surface
+- mostly matte finish
+- very subtle soft reflections
+- refined, modern, and easy-to-clean appearance
+- consistent leather-like texture
+- no excessive gloss or plastic appearance
+
+Preserve the original sofa structure, cushions, seams, stitching, armrests,
+legs, proportions, and product design.
+Only change the upholstery material impression.
+`,
+
+  silicone_gloss: `
+Change the sofa upholstery to premium glossy silicone leather.
+
+Material characteristics:
+- smooth silicone leather surface
+- clearly visible elegant gloss
+- refined light reflections across the cushions
+- polished and luxurious appearance
+- glossy but still realistic
+- not metallic and not plastic
+- highlights should naturally follow the sofa's curves
+
+Preserve the original sofa structure, cushions, seams, stitching, armrests,
+legs, proportions, and product design.
+Only change the upholstery material impression and gloss level.
+`,
+
+  natural_leather: `
+Change the sofa upholstery to premium natural leather.
+
+Material characteristics:
+- subtle natural leather grain
+- soft depth and realistic leather texture
+- gentle highlights and natural tonal variation
+- elegant, durable, and high-quality appearance
+- not overly glossy
+- avoid artificial plastic texture
+
+Preserve the original sofa structure, cushions, seams, stitching, armrests,
+legs, proportions, and product design.
+Only change the upholstery material impression.
+`,
+
+  italian_leather: `
+Change the sofa upholstery to premium Italian natural leather.
+
+Material characteristics:
+- fine and sophisticated natural leather grain
+- rich depth and elegant tonal variation
+- soft and refined highlights
+- supple and luxurious appearance
+- premium European leather finish
+- high-end but realistic surface
+- avoid artificial plastic texture
+- avoid excessive gloss
+
+Preserve the original sofa structure, cushions, seams, stitching, armrests,
+legs, proportions, and product design.
+Only change the upholstery material impression.
+`,
+};
 
 /**
- * 컬러별 고정 프롬프트 삭제
+ * 컬러별 고정 프롬프트
  */
+const COLOR_PROMPTS: Record<string, string> = {
+  original: `
+Preserve the original sofa color exactly as shown in the product image.
+
+Do not intentionally recolor the sofa.
+The color may change only slightly and naturally because of the selected lighting.
+`,
+
+  ivory: `
+Apply a soft warm ivory color.
+It should be brighter than beige but softer and warmer than pure white.
+Avoid strong yellow tones.
+`,
+
+  deep_green: `
+Apply a deep muted green color.
+The tone should feel calm, sophisticated, natural, and premium.
+Avoid bright emerald or fluorescent green.
+`,
+
+  charcoal: `
+Apply a deep charcoal gray color.
+It should be dark, neutral, refined, and softer than pure black.
+`,
+
+  indie_pink: `
+Apply a muted dusty indie pink color.
+The tone should feel soft, elegant, calm, and slightly desaturated.
+Avoid vivid or fluorescent pink.
+`,
+
+  gray_blue: `
+Apply a muted gray-blue color.
+Balance soft blue and neutral gray with a calm, modern appearance.
+Avoid vivid royal blue.
+`,
+
+  white: `
+Apply a clean soft white color.
+It should look natural under interior lighting.
+Do not make it overexposed or unnaturally bluish.
+`,
+
+  beige: `
+Apply a soft warm beige color.
+The tone should be neutral, calm, and natural.
+Avoid making it strongly yellow.
+`,
+
+  olive: `
+Apply a muted olive green color.
+The tone should feel natural, sophisticated, calm, and slightly warm.
+Avoid bright green.
+`,
+
+  camel: `
+Apply a warm camel brown color.
+Balance tan and warm brown characteristics.
+Avoid overly orange or yellow results.
+`,
+
+  smoky_gray: `
+Apply a medium-dark smoky gray color.
+The tone should feel soft, muted, modern, and slightly warm.
+Avoid cold metallic gray.
+`,
+
+  black: `
+Apply a deep premium black color.
+Preserve visible material texture, seams, cushions, and natural highlights.
+Do not crush all details into featureless pure black.
+`,
+
+  gray: `
+Apply a balanced medium gray color.
+The tone should be neutral, elegant, and realistic under the selected lighting.
+`,
+
+  light_gray: `
+Apply a soft light gray color.
+It should remain clearly gray while feeling bright, clean, and neutral.
+`,
+
+  sky_blue: `
+Apply a soft muted sky blue color.
+The tone should feel bright, calm, airy, and sophisticated.
+Avoid vivid blue.
+`,
+
+  green: `
+Apply a refined natural green color.
+The tone should be balanced, slightly muted, and suitable for premium furniture.
+`,
+
+  euro_snow: `
+Apply a refined Euro Snow color.
+Use a very bright warm off-white tone with a subtle creamy undertone.
+It must remain softer and warmer than pure white.
+`,
+
+  deep_cream: `
+Apply a rich deep cream color.
+Use a warm creamy tone with gentle beige undertones and a luxurious soft appearance.
+`,
+
+  lily_gray: `
+Apply a soft Lily Gray color.
+Use a pale elegant gray with a subtle warm undertone and a clean premium appearance.
+`,
+
+  earl_gray_orange: `
+Apply an Earl Gray Orange color.
+Use a sophisticated muted warm orange softened with gray undertones.
+Avoid bright tangerine or vivid orange.
+`,
+
+  forest_green: `
+Apply a deep Forest Green color.
+Use a rich, muted dark green with natural depth and a luxurious appearance.
+Avoid bright emerald green.
+`,
+
+  brusque_blue: `
+Apply a refined deep muted blue color.
+Use a sophisticated blue tone with subtle gray undertones.
+Avoid vivid cobalt or royal blue.
+`,
+
+  cognac: `
+Apply a rich cognac leather color.
+Use a warm reddish-brown tone with natural depth, subtle amber undertones,
+and realistic tonal variation.
+`,
+
+  elephant_charcoal: `
+Apply an Elephant Charcoal color.
+Use a deep warm charcoal gray with subtle brown undertones.
+It should remain softer and more dimensional than pure black.
+`,
+
+  cloud_white: `
+Apply a soft Cloud White color.
+Use a clean warm white with gentle softness.
+Avoid harsh blue or yellow casts.
+`,
+
+  plum_pink: `
+Apply a sophisticated Plum Pink color.
+Use a muted dusty pink with subtle plum undertones and a calm luxurious appearance.
+Avoid vivid magenta.
+`,
+
+  hush_brown: `
+Apply a rich Hush Brown color.
+Use a deep, warm, muted brown with soft chocolate and earthy undertones.
+`,
+
+  dark_night_black: `
+Apply a Dark Night Black color.
+Use an extremely deep luxurious black with subtle cool depth.
+Preserve visible leather grain, seams, highlights, and cushion details.
+`,
+};
 
 function getLightingPrompt(lighting: string): string {
   if (lighting === "warm") {
@@ -266,10 +527,9 @@ export async function POST(req: Request) {
     const roomBase64 = roomBuffer.toString("base64");
     const sofaBase64 = sofaBuffer.toString("base64");
 
-   
-const materialText =
-  selectedMaterial.prompt?.trim() ||
-  `
+    const materialText =
+      MATERIAL_PROMPTS[material] ||
+      `
 Apply the selected upholstery material named "${selectedMaterial.name}" realistically.
 
 Preserve:
@@ -281,12 +541,12 @@ Preserve:
 - legs
 - product identity
 
-Only change the upholstery surface material.
+Only change the upholstery material impression.
 `;
 
-const colorText =
-  selectedColor.prompt?.trim() ||
-  `
+    const colorText =
+      COLOR_PROMPTS[color] ||
+      `
 Apply the selected color named "${selectedColor.name}" realistically.
 
 Preserve:
@@ -310,6 +570,11 @@ The selected color should remain recognizable under the selected lighting.
     const imagePrompt = `
 Image 1 is the customer's real room photograph.
 Image 2 is the authoritative product reference image of the exact sofa.
+
+First inspect Image 1 for any existing sofa or sofa-related seating.
+If an existing sofa is present, remove and replace it with the exact selected sofa from Image 2.
+There must be only one main sofa after editing.
+Do not place the new sofa in front of, beside, or on top of the existing sofa.
 
 Use Image 2 as a locked visual reference.
 Place that exact sofa into Image 1 without redesigning or reconstructing it.
@@ -373,15 +638,18 @@ Placement and transformation rules:
 - Match highlights and shadows to the selected lighting.
 - Avoid floating above the floor.
 - Avoid embedding the sofa into walls, floors, or other furniture.
+- Use the approximate floor area and position occupied by the removed sofa as the preferred placement zone for the selected sofa.
+- If the selected sofa has different dimensions, adjust only its overall scale and position naturally within the available room space.
 
 Room preservation rules:
 - Keep the room structure unchanged.
-- Keep walls, floor, ceiling, windows, doors, and existing objects in place.
-- Do not remove existing objects.
-- Do not add extra furniture.
-- Do not add people.
-- Do not add text, logos, labels, borders, or watermarks.
-- Do not crop the room unnecessarily.
+- Keep walls, floor, ceiling, windows, doors, and all non-sofa objects in place.
+- If Image 1 already contains a sofa, couch, sectional, loveseat, armchair, ottoman, or sofa-related furniture in the intended placement area, remove it completely before placing the selected sofa from Image 2.
+- Remove the existing sofa cleanly, including its visible body, cushions, legs, shadows, reflections, and occlusion.
+- Reconstruct the wall, floor, rug, and background naturally where the original sofa was removed.
+- Do not leave duplicate sofas, sofa fragments, ghosting, residual cushions, shadows, or visual traces.
+- Keep all unrelated furniture and room objects unchanged.
+- Do not remove tables, rugs, lamps, curtains, cabinets, plants, decorations, windows, or doors unless they physically block the exact sofa placement area.
 
 Product information:
 Name: ${sofa.name}
@@ -392,10 +660,11 @@ Depth: ${sofa.depth || "정보 없음"}mm
 Height: ${sofa.height || "정보 없음"}mm
 
 Final priority order:
-1. Preserve the exact sofa shape, composition, module arrangement, and product identity from Image 2.
-2. Place and rotate that same sofa naturally in the room.
-3. Apply the selected material and color only to the upholstery surface.
-4. Match the selected lighting.
+1. Detect and completely remove any existing sofa in Image 1.
+2. Preserve the exact shape, composition, and product identity of the selected sofa from Image 2.
+3. Place that sofa naturally in the cleared location.
+4. Apply the selected material, color, and lighting.
+5. Preserve all unrelated room elements.
 
 Never sacrifice sofa-shape fidelity to improve styling or room integration.
 

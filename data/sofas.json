@@ -7,7 +7,8 @@
     "width": 1840,
     "depth": 750,
     "height": 850,
-    "image": "/sofas/sofa01.png"
+    "image": "/sofas/sofa01.png",
+    "active": false
   },
   {
     "id": "sofa02",
@@ -17,7 +18,8 @@
     "width": 2200,
     "depth": 950,
     "height": 820,
-    "image": "/sofas/sofa02.png"
+    "image": "/sofas/sofa02.png",
+    "active": false
   },
   {
     "id": "sofa03",
@@ -27,7 +29,8 @@
     "width": 2250,
     "depth": 850,
     "height": 700,
-    "image": "/sofas/sofa03.png"
+    "image": "/sofas/sofa03.png",
+    "active": false
   },
   {
     "id": "sofa04",
@@ -37,9 +40,10 @@
     "width": 2800,
     "depth": 940,
     "height": 750,
-    "image": "/sofas/sofa04.png"
-  },  
-{
+    "image": "/sofas/sofa04.png",
+    "active": false
+  },
+  {
     "id": "sofa05",
     "name": "멕소4인 천연면피가죽",
     "size": "4인용",
@@ -47,9 +51,10 @@
     "width": 2600,
     "depth": 800,
     "height": 930,
-    "image": "/sofas/sofa05.png"
+    "image": "/sofas/sofa05.png",
+    "active": false
   },
-{
+  {
     "id": "sofa06",
     "name": "무에나3 패브릭",
     "size": "3인용",
@@ -57,9 +62,10 @@
     "width": 2060,
     "depth": 1030,
     "height": 850,
-    "image": "/sofas/sofa06.png"
+    "image": "/sofas/sofa06.png",
+    "active": false
   },
-{
+  {
     "id": "sofa07",
     "name": "카든3 천연면피가죽",
     "size": "3인용",
@@ -67,9 +73,10 @@
     "width": 2300,
     "depth": 1020,
     "height": 940,
-    "image": "/sofas/sofa07.png"
+    "image": "/sofas/sofa07.png",
+    "active": false
   },
-{
+  {
     "id": "sofa08",
     "name": "카든4 천연면피가죽",
     "size": "4인용",
@@ -77,6 +84,146 @@
     "width": 3000,
     "depth": 1020,
     "height": 940,
-    "image": "/sofas/sofa08.png"
+    "image": "/sofas/sofa08.png",
+    "active": false
+  },
+  {
+    "id": "cloud_1p_ivory",
+    "name": "클라우드1인용",
+    "size": "1인용",
+    "color": "아이보리",
+    "width": 850,
+    "depth": 850,
+    "height": 701,
+    "image": "/sofas/cloud_1p_ivory.png"
+  },
+  {
+    "id": "cloud_2p_ivory",
+    "name": "클라우드2인",
+    "size": "2인용",
+    "color": "아이보리",
+    "width": 1400,
+    "depth": 850,
+    "height": 700,
+    "image": "/sofas/cloud_2p_ivory.png"
+  },
+  {
+    "id": "cloud_3p_ivory",
+    "name": "클라우드1인+2인",
+    "size": "3인용",
+    "color": "아이보리",
+    "width": 2250,
+    "depth": 850,
+    "height": 700,
+    "image": "/sofas/cloud_3p_ivory.png"
+  },
+  {
+    "id": "kenzyco_2p_cognac",
+    "name": "켄지2인 오픈카우치",
+    "size": "2인용",
+    "color": "카멜",
+    "width": 1860,
+    "depth": 1450,
+    "height": 700,
+    "image": "/sofas/kenzyco_2p_cognac.png"
+  },
+  {
+    "id": "kenzyc_2p_cognac",
+    "name": "켄지2인 카우치",
+    "size": "2인용",
+    "color": "카멜",
+    "width": 2200,
+    "depth": 1450,
+    "height": 700,
+    "image": "/sofas/kenzyc_2p_cognac.png",
+    "active": true
+  },
+  {
+    "id": "kenzyi_3p_cognac",
+    "name": "켄지3인 일자",
+    "size": "3인용",
+    "color": "카멜",
+    "width": 2200,
+    "depth": 900,
+    "height": 700,
+    "image": "/sofas/kenzyi_3p_cognac.png",
+    "active": true
+  },
+  {
+    "id": "kenzyo_3p_cognac",
+    "name": "켄지3인 오픈",
+    "size": "3인용",
+    "color": "카멜",
+    "width": 1960,
+    "depth": 900,
+    "height": 700,
+    "image": "/sofas/kenzyo_3p_cognac.png",
+    "active": true
+  },
+  {
+    "id": "kenzyc_4p_cognac",
+    "name": "켄지4인 카우치",
+    "size": "4인용",
+    "color": "카멜",
+    "width": 2960,
+    "depth": 1450,
+    "height": 700,
+    "image": "/sofas/kenzyc_4p_cognac.png",
+    "active": true
+  },
+  {
+    "id": "kenzyi_4p_cognac",
+    "name": "켄지4인 일자",
+    "size": "4인용",
+    "color": "카멜",
+    "width": 3060,
+    "depth": 900,
+    "height": 700,
+    "image": "/sofas/kenzyi_4p_cognac.png",
+    "active": true
+  },
+  {
+    "id": "kenzyc_5p_cognac",
+    "name": "켄지5인 코너",
+    "size": "5인",
+    "color": "카멜",
+    "width": 3160,
+    "depth": 2300,
+    "height": 700,
+    "image": "/sofas/kenzyc_5p_cognac.png",
+    "active": true
+  },
+  {
+    "id": "kenzycc_5p_cognac",
+    "name": "켄지5인 코너카우치",
+    "size": "5인용",
+    "color": "카멜",
+    "width": 3060,
+    "depth": 2300,
+    "height": 700,
+    "image": "/sofas/kenzycc_5p_cognac.png",
+    "active": true
+  },
+  {
+    "id": "ord_3p_black",
+    "name": "오드3인",
+    "size": "3인용",
+    "color": "블랙(유광)",
+    "width": 2000,
+    "depth": 940,
+    "height": 750,
+    "image": "/sofas/ord_3p_black.png",
+    "active": true
+  },
+  {
+    "id": "ord_4p_black",
+    "name": "오드4인",
+    "size": "4인용",
+    "color": "블랙(유광)",
+    "width": 2800,
+    "depth": 940,
+    "height": 750,
+    "image": "/sofas/ord_4p_black.png",
+    "active": true
   }
 ]

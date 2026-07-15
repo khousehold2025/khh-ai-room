@@ -1,10 +1,10 @@
 "use client";
 import { useMember } from "@/hooks/useMember";
-import { useEffect, useMemo, useState } from "react";
+
+import { useEffect, useState } from "react";
 import UploadPanel from "@/components/UploadPanel";
 import SofaGrid from "@/components/SofaGrid";
 import sofas from "@/data/sofas.json";
-import materials from "@/data/materials.json";
 
 type AIRoomProps = {
   mode?: "basic" | "member";
@@ -36,28 +36,37 @@ const {
   const [resultImage, setResultImage] = useState<string | null>(null);
   const [advice, setAdvice] = useState("");
 
+  const materialOptions = [
+    {
+      id: "original",
+      title: "원본원단",
+      description: "제품 이미지의 원래 원단과 질감을 최대한 유지합니다.",
+    },
+    {
+      id: "fabric",
+      title: "패브릭",
+      description: "부드럽고 포근한 질감으로 따뜻한 공간 연출에 좋습니다.",
+    },
+    {
+      id: "silicone",
+      title: "실리콘가죽",
+      description: "관리 편의성과 깔끔한 질감을 함께 표현합니다.",
+    },
+    {
+      id: "natural_leather",
+      title: "천연가죽",
+      description: "고급스럽고 깊이 있는 가죽 질감을 표현합니다.",
+    },
+  ];
 
-const materialOptions = useMemo(() => {
-  return materials.filter((item) => item.active !== false);
-}, []);
-
-const selectedMaterial = useMemo(() => {
-  return (
-    materialOptions.find((item) => item.id === material) ||
-    materialOptions[0]
-  );
-}, [materialOptions, material]);
-
-const colorOptions = useMemo(() => {
-  return selectedMaterial?.colors || [];
-}, [selectedMaterial]);
- 
-
-const handleMaterialChange = (materialId: string) => {
-  setMaterial(materialId);
-  setColor("original");
-};
-
+  const colorOptions = [
+    { id: "original", title: "원본색상" },
+    { id: "ivory", title: "아이보리" },
+    { id: "camel", title: "카멜" },
+    { id: "cognac", title: "코냑" },
+    { id: "gray", title: "그레이" },
+    { id: "black", title: "블랙" },
+  ];
 
   const lightingOptions = [
     {
@@ -144,12 +153,8 @@ const handleMaterialChange = (materialId: string) => {
     const sofaName =
       sofas.find((item) => item.id === selectedSofa)?.name || "소파";
 
-const materialName =
-  materialOptions.find((item) => item.id === material)?.name || material;
-
-const colorName =
-  colorOptions.find((item) => item.id === color)?.name || color;
-
+    const materialName = getOptionTitle(materialOptions, material);
+    const colorName = getOptionTitle(colorOptions, color);
     const lightingName = getOptionTitle(lightingOptions, lighting).replace(
       /^[0-9]\.\s*/,
       ""
@@ -325,49 +330,42 @@ const colorName =
 
         <div className="mt-8 rounded-xl bg-white p-6 shadow">
           <h2 className="mb-2 text-xl font-bold">원단 선택</h2>
-
-
-          <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
-    {materialOptions.map((item) => (
-      <button
-        key={item.id}
-        type="button"
-        onClick={() => handleMaterialChange(item.id)}
-        className={`rounded-xl border p-4 text-left transition ${
-          material === item.id
-            ? "border-black bg-black text-white"
-            : "border-gray-200 bg-white text-gray-700"
-        }`}
-      >
-        <div className="font-bold">{item.name}</div>
-      </button>
-    ))}
+          <div className="grid gap-4 md:grid-cols-4">
+            {materialOptions.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setMaterial(item.id)}
+                className={`rounded-xl border p-4 text-left transition ${
+                  material === item.id
+                    ? "border-black bg-black text-white"
+                    : "border-gray-200 bg-white text-gray-700"
+                }`}
+              >
+                <div className="font-bold">{item.title}</div>
+                <p className="mt-2 text-sm leading-6">{item.description}</p>
+              </button>
+            ))}
           </div>
         </div>
 
         <div className="mt-8 rounded-xl bg-white p-6 shadow">
           <h2 className="mb-2 text-xl font-bold">색상 선택</h2>
-
-
-         <p className="mb-4 text-sm text-gray-500">
-    {selectedMaterial?.name}에서 선택 가능한 컬러입니다.
-  </p>
-
-  <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
-    {colorOptions.map((item) => (
-      <button
-        key={item.id}
-        type="button"
-        onClick={() => setColor(item.id)}
-        className={`rounded-xl border px-4 py-4 font-semibold ${
-          color === item.id
-            ? "border-black bg-black text-white"
-            : "border-gray-200 bg-white text-gray-700"
-        }`}
-      >
-        {item.name}
-      </button>
-    ))}
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+            {colorOptions.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setColor(item.id)}
+                className={`rounded-xl border px-4 py-4 font-semibold ${
+                  color === item.id
+                    ? "border-black bg-black text-white"
+                    : "border-gray-200 bg-white text-gray-700"
+                }`}
+              >
+                {item.title}
+              </button>
+            ))}
           </div>
         </div>
 
