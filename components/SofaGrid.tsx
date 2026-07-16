@@ -11,7 +11,7 @@ export default function SofaGrid({
   onSelect,
 }: Props) {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
 
    {sofas
   .filter((sofa) => sofa.active !== false)

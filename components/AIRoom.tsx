@@ -34,6 +34,10 @@ const {
   const [loading, setLoading] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [resultImage, setResultImage] = useState<string | null>(null);
+
+const [loadingDots, setLoadingDots] = useState(1);
+const [generationComplete, setGenerationComplete] = useState(false);
+
   const [advice, setAdvice] = useState("");
 
 
@@ -91,14 +95,37 @@ const handleMaterialChange = (materialId: string) => {
   ];
 
   useEffect(() => {
-    if (cooldown <= 0) return;
 
-    const timer = setInterval(() => {
-      setCooldown((prev) => Math.max(prev - 1, 0));
-    }, 1000);
+if (!loading) {
+    setLoadingDots(1);
+    return;
+  }
 
-    return () => clearInterval(timer);
-  }, [cooldown]);
+  const timer = setInterval(() => {
+    setLoadingDots((previous) =>
+      previous >= 3 ? 1 : previous + 1
+    );
+  }, 500);
+
+  return () => clearInterval(timer);
+}, [loading]);
+
+
+   useEffect(() => {
+  if (cooldown <= 0) {
+    if (!isMemberMode) {
+      setGenerationComplete(false);
+    }
+
+    return;
+  }
+
+  const timer = setInterval(() => {
+    setCooldown((previous) => Math.max(previous - 1, 0));
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [cooldown, isMemberMode]);
 
   const handleImage = (file: File) => {
     setRoomImage(file);
@@ -223,6 +250,7 @@ const colorName =
 
     try {
       setLoading(true);
+setGenerationComplete(false);
       setResultImage(null);
       setAdvice("");
 
@@ -252,9 +280,14 @@ const colorName =
 
       setResultImage(json.image);
       setAdvice(json.advice || "");
+setGenerationComplete(true);
 
       if (isMemberMode) {
         await decreaseRemain();
+
+ setTimeout(() => {
+    setGenerationComplete(false);
+  }, 30000);
       } else {
         setCooldown(30);
       }
@@ -266,13 +299,13 @@ const colorName =
     }
   };
 
-  const isDisabled =
-    loading ||
-    !preview ||
-    !selectedSofa ||
-    (!isMemberMode && cooldown > 0) ||
-    (isMemberMode && remain <= 0);
-    (isMemberMode && !active)
+ const isDisabled =
+  loading ||
+  !preview ||
+  !selectedSofa ||
+  (!isMemberMode && cooldown > 0) ||
+  (isMemberMode && remain <= 0) ||
+  (isMemberMode && !active);
 
   return (
     <main className="min-h-screen bg-gray-100">
@@ -314,14 +347,14 @@ const colorName =
           </div>
         )}
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-2">
-          <UploadPanel image={preview} onSelect={handleImage} />
+    <div className="mt-10 space-y-8">
+  <UploadPanel image={preview} onSelect={handleImage} />
 
-          <div className="rounded-xl bg-white p-6 shadow">
-            <h2 className="mb-5 text-xl font-bold">소파 선택</h2>
-            <SofaGrid selected={selectedSofa} onSelect={setSelectedSofa} />
-          </div>
-        </div>
+  <div className="rounded-xl bg-white p-6 shadow">
+    <h2 className="mb-5 text-xl font-bold">소파 선택</h2>
+    <SofaGrid selected={selectedSofa} onSelect={setSelectedSofa} />
+  </div>
+</div>
 
         <div className="mt-8 rounded-xl bg-white p-6 shadow">
           <h2 className="mb-2 text-xl font-bold">원단 선택</h2>
@@ -399,11 +432,13 @@ const colorName =
           disabled={isDisabled}
           className="mt-10 w-full rounded-xl bg-black py-5 text-xl font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {loading
-            ? "AI 생성중..."
-            : !isMemberMode && cooldown > 0
-            ? `AI 배치하기 (${cooldown}초)`
-            : "AI 배치하기"}
+         {loading
+  ? `AI 생성중${".".repeat(loadingDots)}`
+  : generationComplete && !isMemberMode && cooldown > 0
+  ? `생성완료 (${cooldown}초)`
+  : generationComplete && isMemberMode
+  ? "생성완료"
+  : "AI 배치하기"}
         </button>
 
         {resultImage && (

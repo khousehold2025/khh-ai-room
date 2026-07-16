@@ -266,37 +266,94 @@ export async function POST(req: Request) {
     const roomBase64 = roomBuffer.toString("base64");
     const sofaBase64 = sofaBuffer.toString("base64");
 
-   
-const materialText =
-  selectedMaterial.prompt?.trim() ||
-  `
-Apply the selected upholstery material named "${selectedMaterial.name}" realistically.
+   const geometryLockText = `
+ABSOLUTE SOFA GEOMETRY LOCK:
 
-Preserve:
-- the original sofa structure
-- proportions
+Image 2 is the authoritative reference image of the exact sofa product.
+Treat the sofa in Image 2 as a locked product photograph.
+
+Do not redraw, regenerate, reconstruct, reinterpret, or redesign the sofa.
+
+Preserve exactly:
+- overall shape
+- silhouette and outer contour
+- width-to-height ratio
+- depth proportions
+- seat count
+- module arrangement
+- cushion position
+- cushion size
+- cushion thickness
+- cushion volume
+- cushion angle
+- cushion shape
+- backrest and headrest shape
+- armrest shape, width, height, and angle
+- chaise direction
+- asymmetric left-right configuration
 - seams
-- cushions
-- armrests
+- stitching
+- piping
+- panel divisions
+- quilting
+- folds
+- gaps
+- base
 - legs
-- product identity
+- visible hardware
+- floor clearance
 
-Only change the upholstery surface material.
-`;
+Material and color changes are surface-only edits.
 
-const colorText =
-  selectedColor.prompt?.trim() ||
-  `
-Apply the selected color named "${selectedColor.name}" realistically.
+Material may change only:
+- surface texture
+- grain
+- gloss
+- reflectivity
 
-Preserve:
-- visible upholstery texture
-- seams
-- highlights
-- shadows
+Color may change only:
+- upholstery color
 - natural tonal variation
 
-The selected color should remain recognizable under the selected lighting.
+Never change:
+- geometry
+- construction
+- padding volume
+- cushion shape
+- seam position
+- panel division
+- module arrangement
+- product identity
+
+If any instruction conflicts with preserving the exact sofa shape,
+preserving the exact sofa shape has absolute priority.
+`;
+
+const materialText = `
+${geometryLockText}
+
+${selectedMaterial.prompt?.trim() || `
+Apply the selected upholstery material named "${selectedMaterial.name}" realistically.
+
+Change only:
+- visible upholstery surface texture
+- surface grain
+- gloss level
+- reflectivity
+
+Do not change any physical sofa component.
+`}
+`;
+
+const colorText = `
+${geometryLockText}
+
+${selectedColor.prompt?.trim() || `
+Apply the selected color named "${selectedColor.name}" realistically.
+
+Only recolor the visible upholstery surface.
+Do not alter the sofa geometry, cushion volume, seams, or structure.
+`}
 `;
 
     const lightingText = getLightingPrompt(lighting);
@@ -308,6 +365,8 @@ The selected color should remain recognizable under the selected lighting.
     });
 
     const imagePrompt = `
+${geometryLockText}
+
 Image 1 is the customer's real room photograph.
 Image 2 is the authoritative product reference image of the exact sofa.
 
@@ -334,50 +393,70 @@ ${colorText}
 Selected lighting:
 ${lightingText}
 
-Important upholstery instructions:
-- Apply the selected material and selected color consistently to all upholstered parts.
-- If original material is selected, preserve the original upholstery material.
-- If original color is selected, preserve the original sofa color.
-- Keep the selected material texture clearly visible.
-- Keep the selected color realistic under the selected lighting.
-- Do not let the lighting completely replace or distort the selected color.
+Important upholstery editing rules — highest priority:
+- Image 2 is the locked authoritative reference for the exact sofa product.
+- Treat the sofa geometry from Image 2 as immutable and fully locked.
+- Changing material or color is a surface-only edit, equivalent to recoloring and retexturing the existing upholstery pixels.
+- Do not regenerate, redraw, reconstruct, reinterpret, or redesign the sofa.
+- Apply the selected material and selected color only to the visible upholstery surface.
+- Keep the exact original silhouette and outer contour.
+- Keep the exact original width-to-height ratio and depth proportions.
+- Keep every cushion in exactly the same position, size, thickness, volume, angle, and shape.
+- Keep every seam, stitch line, piping line, panel boundary, crease, gap, tuft, quilting pattern, and edge in exactly the same position.
+- Keep the exact armrest shape, armrest width, armrest height, and armrest angle.
+- Keep the exact backrest, headrest, seat, base, module arrangement, legs, and visible hardware.
+- Keep all asymmetric features and left-right configuration exactly as shown.
+- Do not mirror or reverse the sofa.
+- Do not inflate, deflate, soften, sharpen, round, flatten, widen, narrow, lengthen, shorten, simplify, or reshape any component.
+- Material changes may alter only surface texture, grain, reflectivity, and gloss.
+- Color changes may alter only upholstery color and natural tonal variation.
+- Material and color changes must never alter geometry, padding volume, seam position, panel division, construction, or product identity.
+- If accurate material or color conversion conflicts with preserving the sofa shape, preserve the exact sofa shape and structure first.
 
-Sofa preservation rules — highest priority:
-- Image 2 is the exact sofa product reference and must remain the source of truth.
-- Preserve the exact sofa composition, construction, silhouette, proportions, and module arrangement shown in Image 2.
-- Preserve the exact number, size, shape, thickness, and placement of all seat cushions and back cushions.
-- Preserve the exact armrest design, armrest width, armrest height, and armrest angle.
-- Preserve the exact backrest design, headrest design, seat depth, base shape, legs, seams, stitching, piping, quilting, gaps, and visible product details.
-- Preserve all asymmetrical features exactly as shown in Image 2.
-- Do not invent, remove, merge, split, enlarge, shrink, soften, simplify, or redesign any sofa part.
-- Do not change a straight sofa into a corner sofa, sectional sofa, chaise sofa, or another configuration.
-- Do not change a chaise, corner, module, ottoman, or armrest from one side to the other.
-- Do not mirror the sofa unless mirroring is absolutely required by the requested room orientation.
-- When changing viewing direction, rotate the same physical sofa as a rigid product. Do not reconstruct or reinterpret its design.
-- Material and color changes may affect only the upholstery surface appearance.
-- Material and color changes must not alter cushion volume, edge shape, seam position, panel division, padding, or structure.
-- If any conflict occurs, preserving the exact sofa product shape is more important than changing material, color, lighting, perspective, or placement.
+Sofa geometry lock rules — absolute priority:
+- Preserve the exact sofa from Image 2 as if it were a cut-out product photograph being composited into the room.
+- The sofa must remain visually identical to Image 2 except for overall placement, uniform scale, viewing orientation, perspective, upholstery surface material, upholstery color, lighting response, and contact shadow.
+- Use the original product image as the direct source for the sofa's shape and internal details.
+- Do not create a new sofa inspired by Image 2.
+- Do not approximate the design.
+- Do not reinterpret hidden or unclear portions by inventing new shapes.
+- Preserve the exact number and arrangement of modules, seats, backs, cushions, armrests, headrests, ottomans, and chaise sections.
+- Preserve the exact left-right direction of chaise sections, corners, arms, asymmetrical modules, and open ends.
+- Preserve the exact cushion gaps, seam locations, stitching, piping, quilting, folds, and visible upholstery divisions.
+- Preserve the exact leg count, leg position, leg design, base height, and floor clearance.
+- Do not add or remove cushions, modules, arms, legs, headrests, or decorative elements.
+- Do not turn the sofa into another seating type or configuration.
+- Do not make the sofa look more modern, softer, fuller, slimmer, or more luxurious by altering its physical design.
 
-Placement and transformation rules:
-- The only permitted geometric changes are translation, uniform scaling, perspective correction, and rotation of the complete sofa as one rigid object.
-- Keep the sofa's internal proportions locked during every transformation.
-- Do not independently rotate, move, resize, or reshape individual cushions, modules, armrests, legs, or backrests.
-- Place the sofa naturally on the floor.
-- Resize the complete sofa uniformly to a realistic scale based on the room and the provided product dimensions.
-- Rotate the complete sofa only when necessary to match the room camera angle and placement direction.
-- Adjust perspective only to make the same sofa fit the room viewpoint.
-- Do not stretch the sofa horizontally or vertically.
-- Do not compress, widen, narrow, deepen, shorten, or distort the sofa.
-- Keep the sofa level, stable, and physically plausible.
-- Add realistic contact shadows under the legs and base.
-- Match highlights and shadows to the selected lighting.
-- Avoid floating above the floor.
-- Avoid embedding the sofa into walls, floors, or other furniture.
+Permitted transformations only:
+- Move the complete sofa as one rigid object.
+- Rotate the complete sofa as one rigid object.
+- Apply uniform scaling to the complete sofa.
+- Apply camera-perspective correction to the complete sofa.
+- Adjust overall lighting, highlights, shadows, and contact shadow.
+- Change only the upholstery surface material and upholstery color.
 
-Room preservation rules:
+Forbidden geometric transformations:
+- no non-uniform scaling
+- no horizontal stretching
+- no vertical stretching
+- no widening or narrowing
+- no independent resizing of sofa parts
+- no independent movement or rotation of cushions or modules
+- no structural reconstruction
+- no shape generation
+- no geometry hallucination
+
+Room preservation and sofa replacement rules:
 - Keep the room structure unchanged.
-- Keep walls, floor, ceiling, windows, doors, and existing objects in place.
-- Do not remove existing objects.
+- Keep walls, floor, ceiling, windows, doors, and all unrelated room objects unchanged.
+- First inspect Image 1 for an existing sofa, couch, sectional, loveseat, chaise, armchair, ottoman, or sofa-related seating in the intended placement area.
+- If an existing sofa or sofa-related seating is present in the intended placement area, remove it completely before placing the selected sofa from Image 2.
+- Remove the existing sofa body, cushions, legs, shadows, reflections, and visible fragments.
+- Reconstruct the wall, floor, rug, and background naturally where the old sofa was removed.
+- Do not leave duplicate sofas, ghost images, residual cushions, leftover shadows, or sofa fragments.
+- Preserve all unrelated furniture and objects.
+- Do not remove tables, rugs, lamps, curtains, cabinets, plants, decorations, windows, or doors.
 - Do not add extra furniture.
 - Do not add people.
 - Do not add text, logos, labels, borders, or watermarks.
@@ -392,14 +471,15 @@ Depth: ${sofa.depth || "정보 없음"}mm
 Height: ${sofa.height || "정보 없음"}mm
 
 Final priority order:
-1. Preserve the exact sofa shape, composition, module arrangement, and product identity from Image 2.
-2. Place and rotate that same sofa naturally in the room.
-3. Apply the selected material and color only to the upholstery surface.
-4. Match the selected lighting.
+1. Preserve the exact sofa geometry, silhouette, construction, proportions, cushion arrangement, seams, and product identity from Image 2.
+2. Remove an existing sofa from the room when replacement is required.
+3. Composite the exact selected sofa naturally into the cleared room position.
+4. Apply the selected material only as a surface texture and reflectivity change.
+5. Apply the selected color only as a surface recoloring operation.
+6. Match lighting and contact shadows to the room.
 
-Never sacrifice sofa-shape fidelity to improve styling or room integration.
-
-Return only one final photorealistic interior placement image.
+Never sacrifice sofa-shape fidelity for material realism, color accuracy, viewing angle, room integration, styling, or visual attractiveness.
+When uncertain, preserve the original product image more literally rather than creatively regenerating the sofa.
 `;
 
     const imageResponse = await ai.models.generateContent({
