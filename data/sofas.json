@@ -225,5 +225,27 @@
     "height": 750,
     "image": "/sofas/ord_4p_black.png",
     "active": true
+  },
+  {
+    "id": "mexxo_3p_camel",
+    "name": "멕소3인",
+    "size": "3인용",
+    "color": "카멜",
+    "width": 1800,
+    "depth": 800,
+    "height": 930,
+    "image": "/sofas/mexxo_3p_camel.png",
+    "active": true
+  },
+  {
+    "id": "mexxo_4p_camel",
+    "name": "멕소4인",
+    "size": "4인용",
+    "color": "카멜",
+    "width": 2600,
+    "depth": 800,
+    "height": 930,
+    "image": "/sofas/mexxo_4p_camel.png",
+    "active": true
   }
 ]
