@@ -1,0 +1,247 @@
+[
+  {
+    "id": "original",
+    "name": "원본원단",
+    "prompt": "IMPORTANT MATERIAL TARGET RULES. Apply this upholstery material ONLY to the sofa copied from Image 2. Never apply this material to any sofa already visible in Image 1. If Image 1 contains an existing sofa, remove that sofa completely before placing the selected sofa from Image 2. Only after the selected sofa from Image 2 has been placed, apply the selected upholstery material to that sofa. Changing material is a surface-only edit. Do not redesign, regenerate, reshape, reinterpret, or reconstruct the sofa. Preserve the exact silhouette, proportions, cushion shapes, cushion thickness, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, and module arrangement from Image 2. The sofa from Image 2 must remain the exact same product. Preserve the original upholstery material exactly as shown in Image 2. Do not change material type, texture, grain, gloss level, reflectivity, seams, stitching, panel divisions, or upholstery finish. Allow only natural lighting variation.",
+    "active": true,
+    "locked": true,
+    "colors": [
+      {
+        "id": "original",
+        "name": "원본색상",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Preserve the original sofa color exactly as shown in Image 2. Do not intentionally recolor the sofa. Allow only slight and natural color variation caused by the selected lighting.",
+        "locked": true
+      }
+    ]
+  },
+  {
+    "id": "fabric",
+    "name": "패브릭",
+    "active": true,
+    "prompt": "IMPORTANT MATERIAL TARGET RULES. Apply this upholstery material ONLY to the sofa copied from Image 2. Never apply this material to any sofa already visible in Image 1. If Image 1 contains an existing sofa, remove that sofa completely before placing the selected sofa from Image 2. Only after the selected sofa from Image 2 has been placed, apply the selected upholstery material to that sofa. Changing material is a surface-only edit. Do not redesign, regenerate, reshape, reinterpret, or reconstruct the sofa. Preserve the exact silhouette, proportions, cushion shapes, cushion thickness, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, and module arrangement from Image 2. The sofa from Image 2 must remain the exact same product. Apply premium woven upholstery fabric with a soft, dense, refined textile weave and a mostly matte surface. The fabric should look warm, comfortable, realistic, and suitable for a high-quality sofa. Change only the visible upholstery surface texture, weave, fiber detail, and matte appearance. Do not create additional folds, soften cushions, inflate padding, move seams, or change cushion shape.",
+    "colors": [
+      {
+        "id": "original",
+        "name": "원본색상",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Preserve the original sofa color exactly as shown in Image 2. Do not intentionally recolor the sofa. Allow only slight and natural color variation caused by the selected lighting.",
+        "locked": true
+      },
+      {
+        "id": "ivory",
+        "name": "아이보리",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a soft warm ivory color. It should be brighter than beige but softer and warmer than pure white. Avoid strong yellow tones and preserve realistic fabric texture."
+      },
+      {
+        "id": "deep_green",
+        "name": "딥그린",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a deep muted green color with calm, natural, sophisticated, and premium characteristics. Avoid bright emerald, neon, or fluorescent green."
+      },
+      {
+        "id": "charcoal",
+        "name": "차콜",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a deep charcoal gray color. It should look dark, refined, neutral, and softer than pure black while preserving visible fabric texture."
+      },
+      {
+        "id": "indie_pink",
+        "name": "인디핑크",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a muted dusty indie pink color with a soft, elegant, calm, and slightly desaturated appearance. Avoid vivid, fluorescent, or strongly saturated pink."
+      },
+      {
+        "id": "gray_blue",
+        "name": "그레이블루",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a muted gray-blue color that balances soft blue and neutral gray. The result should feel calm, modern, sophisticated, and not like vivid royal blue."
+      }
+    ]
+  },
+  {
+    "id": "silicone",
+    "name": "실리콘가죽",
+    "active": true,
+    "prompt": "IMPORTANT MATERIAL TARGET RULES. Apply this upholstery material ONLY to the sofa copied from Image 2. Never apply this material to any sofa already visible in Image 1. If Image 1 contains an existing sofa, remove that sofa completely before placing the selected sofa from Image 2. Only after the selected sofa from Image 2 has been placed, apply the selected upholstery material to that sofa. Changing material is a surface-only edit. Do not redesign, regenerate, reshape, reinterpret, or reconstruct the sofa. Preserve the exact silhouette, proportions, cushion shapes, cushion thickness, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, and module arrangement from Image 2. The sofa from Image 2 must remain the exact same product. Apply premium matte silicone leather with a smooth, clean, refined leather-like surface and very subtle soft reflections. It should look modern, durable, realistic, and easy to clean without appearing excessively glossy or plastic. Change only the visible upholstery surface texture, grain, gloss level, and reflectivity.",
+    "colors": [
+      {
+        "id": "original",
+        "name": "원본색상",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Preserve the original sofa color exactly as shown in Image 2. Do not intentionally recolor the sofa. Allow only slight and natural color variation caused by the selected lighting.",
+        "locked": true
+      },
+      {
+        "id": "white",
+        "name": "화이트",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a clean soft white color. Keep the material texture and seams visible. Avoid overexposure, harsh blue tones, or featureless pure white."
+      },
+      {
+        "id": "beige",
+        "name": "베이지",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a soft warm beige color with calm, natural, and neutral characteristics. Avoid making the result strongly yellow or orange."
+      },
+      {
+        "id": "olive",
+        "name": "올리브",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a muted olive green color with a calm, natural, sophisticated, and slightly warm appearance. Avoid bright or fluorescent green."
+      },
+      {
+        "id": "camel",
+        "name": "카멜",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a warm camel brown color that balances tan and warm brown tones. Avoid overly orange, bright yellow, or artificial-looking color."
+      },
+      {
+        "id": "smoky_gray",
+        "name": "스모키그레이",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a medium-dark smoky gray color with a soft, muted, modern, and slightly warm appearance. Avoid cold metallic gray."
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a deep premium black color while preserving visible material texture, seams, cushion contours, and natural highlights. Do not turn the sofa into featureless pure black."
+      }
+    ]
+  },
+  {
+    "id": "silicone_gloss",
+    "name": "실리콘가죽(유광)",
+    "active": true,
+    "prompt": "IMPORTANT MATERIAL TARGET RULES. Apply this upholstery material ONLY to the sofa copied from Image 2. Never apply this material to any sofa already visible in Image 1. If Image 1 contains an existing sofa, remove that sofa completely before placing the selected sofa from Image 2. Only after the selected sofa from Image 2 has been placed, apply the selected upholstery material to that sofa. Changing material is a surface-only edit. Do not redesign, regenerate, reshape, reinterpret, or reconstruct the sofa. Preserve the exact silhouette, proportions, cushion shapes, cushion thickness, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, and module arrangement from Image 2. The sofa from Image 2 must remain the exact same product. Apply premium glossy silicone leather with a smooth refined surface and clearly visible elegant reflections. The gloss should follow the existing sofa curves naturally and look polished and luxurious, but never metallic, wet, or artificial plastic. Change only the visible upholstery surface texture, gloss, highlights, and reflectivity.",
+    "colors": [
+      {
+        "id": "original",
+        "name": "원본색상",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Preserve the original sofa color exactly as shown in Image 2. Do not intentionally recolor the sofa. Allow only slight and natural color variation caused by the selected lighting.",
+        "locked": true
+      },
+      {
+        "id": "white",
+        "name": "화이트",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a clean soft white color with controlled glossy highlights. Preserve seams, cushion contours, and surface detail without overexposing the sofa."
+      },
+      {
+        "id": "camel",
+        "name": "카멜",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a warm camel brown color with balanced tan and brown tones. Preserve elegant glossy reflections without making the color overly orange."
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a deep glossy premium black color. Preserve leather-like surface detail, seams, cushion contours, and elegant controlled reflections. Avoid featureless black areas."
+      }
+    ]
+  },
+  {
+    "id": "natural_leather",
+    "name": "천연가죽",
+    "active": true,
+    "prompt": "IMPORTANT MATERIAL TARGET RULES. Apply this upholstery material ONLY to the sofa copied from Image 2. Never apply this material to any sofa already visible in Image 1. If Image 1 contains an existing sofa, remove that sofa completely before placing the selected sofa from Image 2. Only after the selected sofa from Image 2 has been placed, apply the selected upholstery material to that sofa. Changing material is a surface-only edit. Do not redesign, regenerate, reshape, reinterpret, or reconstruct the sofa. Preserve the exact silhouette, proportions, cushion shapes, cushion thickness, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, and module arrangement from Image 2. The sofa from Image 2 must remain the exact same product. Apply premium natural leather with subtle realistic grain, soft depth, gentle highlights, and natural tonal variation. The leather should look elegant, durable, supple, and high-quality without excessive gloss or artificial plastic texture. Change only the visible upholstery surface grain, texture, tonal variation, and reflectivity.",
+    "colors": [
+      {
+        "id": "original",
+        "name": "원본색상",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Preserve the original sofa color exactly as shown in Image 2. Do not intentionally recolor the sofa. Allow only slight and natural color variation caused by the selected lighting.",
+        "locked": true
+      },
+      {
+        "id": "ivory",
+        "name": "아이보리",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a soft warm ivory leather color. It should be brighter than beige but softer and warmer than pure white, with realistic leather grain and subtle tonal variation."
+      },
+      {
+        "id": "gray",
+        "name": "그레이",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a balanced medium gray leather color with neutral, elegant, and realistic characteristics. Preserve natural leather grain and highlights."
+      },
+      {
+        "id": "light_gray",
+        "name": "라이트그레이",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a soft light gray leather color. It should remain clearly gray while looking bright, clean, neutral, and refined."
+      },
+      {
+        "id": "camel",
+        "name": "카멜",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a warm camel leather color with balanced tan and warm brown characteristics. Preserve realistic leather grain and natural tonal depth."
+      },
+      {
+        "id": "sky_blue",
+        "name": "스카이블루",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a soft muted sky-blue leather color. The result should feel bright, airy, calm, sophisticated, and not strongly saturated."
+      },
+      {
+        "id": "green",
+        "name": "그린",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a refined natural green leather color with a balanced, slightly muted, premium appearance suitable for high-quality furniture."
+      }
+    ]
+  },
+  {
+    "id": "italian_leather",
+    "name": "천연가죽(이태리)",
+    "active": true,
+    "prompt": "IMPORTANT MATERIAL TARGET RULES. Apply this upholstery material ONLY to the sofa copied from Image 2. Never apply this material to any sofa already visible in Image 1. If Image 1 contains an existing sofa, remove that sofa completely before placing the selected sofa from Image 2. Only after the selected sofa from Image 2 has been placed, apply the selected upholstery material to that sofa. Changing material is a surface-only edit. Do not redesign, regenerate, reshape, reinterpret, or reconstruct the sofa. Preserve the exact silhouette, proportions, cushion shapes, cushion thickness, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, and module arrangement from Image 2. The sofa from Image 2 must remain the exact same product. Apply premium Italian natural leather with fine sophisticated grain, rich depth, elegant tonal variation, soft refined highlights, and a supple luxurious appearance. The surface should feel high-end and realistic, with no artificial plastic texture or excessive gloss. Change only the visible upholstery surface grain, texture, tonal variation, gloss, and reflectivity.",
+    "colors": [
+      {
+        "id": "original",
+        "name": "원본색상",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Preserve the original sofa color exactly as shown in Image 2. Do not intentionally recolor the sofa. Allow only slight and natural color variation caused by the selected lighting.",
+        "locked": true
+      },
+      {
+        "id": "euro_snow",
+        "name": "유로스노우",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a refined Euro Snow color: a very bright warm off-white with a subtle creamy undertone. It should remain softer and warmer than pure white."
+      },
+      {
+        "id": "deep_cream",
+        "name": "딥크림",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a rich deep cream color with warm creamy tones, gentle beige undertones, and a soft luxurious appearance."
+      },
+      {
+        "id": "lily_gray",
+        "name": "릴리그레이",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a soft Lily Gray color: a pale elegant gray with a subtle warm undertone and a clean premium appearance."
+      },
+      {
+        "id": "earl_gray_orange",
+        "name": "얼그레이오렌지",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply an Earl Gray Orange color: a sophisticated muted warm orange softened by gray undertones. Avoid vivid orange, tangerine, or strongly saturated results."
+      },
+      {
+        "id": "forest_green",
+        "name": "포레스트그린",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a deep Forest Green color with rich muted dark-green tones, natural depth, and a luxurious appearance. Avoid bright emerald green."
+      },
+      {
+        "id": "brusque_blue",
+        "name": "브스케블루",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a refined deep muted blue color with subtle gray undertones and a calm premium appearance. Avoid vivid cobalt or royal blue."
+      },
+      {
+        "id": "cognac",
+        "name": "꼬냑",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a rich cognac leather color with warm reddish-brown tones, subtle amber undertones, natural depth, and realistic tonal variation."
+      },
+      {
+        "id": "elephant_charcoal",
+        "name": "엘리펀트차콜",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply an Elephant Charcoal color: a deep warm charcoal gray with subtle brown undertones. It should look softer and more dimensional than pure black."
+      },
+      {
+        "id": "cloud_white",
+        "name": "클라우드화이트",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a soft Cloud White color with a clean warm-white appearance and gentle softness. Avoid harsh blue, yellow, or overexposed white."
+      },
+      {
+        "id": "plum_pink",
+        "name": "플럼핑크",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a sophisticated Plum Pink color with muted dusty-pink tones, subtle plum undertones, and a calm luxurious appearance. Avoid vivid magenta."
+      },
+      {
+        "id": "hush_brown",
+        "name": "허쉬브라운",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a rich Hush Brown color with deep warm muted-brown tones, soft chocolate undertones, and natural earthy depth."
+      },
+      {
+        "id": "dark_night_black",
+        "name": "다크나이트블랙",
+        "prompt": "COLOR TARGET RULES. Apply this color ONLY to the sofa copied from Image 2. Never recolor any sofa originally visible in Image 1. The sofa in Image 1 must never receive this color. Apply the color only after the sofa from Image 2 has been placed. Color change is a surface-only edit. Do not alter geometry, silhouette, proportions, cushion volume, seams, stitching, piping, panel divisions, armrests, backrests, legs, chaise direction, or module arrangement. Apply a Dark Night Black color: an extremely deep luxurious black with subtle cool depth. Preserve visible leather grain, seams, highlights, cushion contours, and dimensional detail."
+      }
+    ]
+  }
+]

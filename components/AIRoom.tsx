@@ -25,6 +25,11 @@ const {
 
   const [selectedSofa, setSelectedSofa] = useState("");
   const [roomImage, setRoomImage] = useState<File | null>(null);
+
+const [roomType, setRoomType] = useState<
+  "with-sofa" | "empty-room" | null
+>(null);
+
   const [preview, setPreview] = useState<string | null>(null);
 
   const [material, setMaterial] = useState("original");
@@ -134,6 +139,19 @@ if (!loading) {
     setAdvice("");
   };
 
+const handleRoomTypeChange = (
+  type: "with-sofa" | "empty-room"
+) => {
+  setRoomType(type);
+
+  // 유형이 바뀌면 기존 업로드 초기화
+  setRoomImage(null);
+  setPreview(null);
+  setResultImage(null);
+  setAdvice("");
+};
+
+
   const getOptionTitle = (
     options: { id: string; title: string }[],
     id: string
@@ -238,6 +256,11 @@ const colorName =
       return;
     }
 
+if (!roomType) {
+    alert("공간사진 유형을 선택하세요.");
+    return;
+}
+
     if (!roomImage) {
       alert("방 사진을 선택하세요.");
       return;
@@ -256,6 +279,7 @@ setGenerationComplete(false);
 
       const formData = new FormData();
       formData.append("room", roomImage);
+formData.append("roomType", roomType);
       formData.append("sofa", selectedSofa);
       formData.append("material", material);
       formData.append("color", color);
@@ -301,6 +325,7 @@ setGenerationComplete(true);
 
  const isDisabled =
   loading ||
+!roomType ||
   !preview ||
   !selectedSofa ||
   (!isMemberMode && cooldown > 0) ||
@@ -348,7 +373,13 @@ setGenerationComplete(true);
         )}
 
     <div className="mt-10 space-y-8">
-  <UploadPanel image={preview} onSelect={handleImage} />
+
+  <UploadPanel
+    image={preview}
+    roomType={roomType}
+    onRoomTypeChange={handleRoomTypeChange}
+    onSelect={handleImage}
+/>
 
   <div className="rounded-xl bg-white p-6 shadow">
     <h2 className="mb-5 text-xl font-bold">소파 선택</h2>
@@ -438,7 +469,10 @@ setGenerationComplete(true);
   ? `생성완료 (${cooldown}초)`
   : generationComplete && isMemberMode
   ? "생성완료"
-  : "AI 배치하기"}
+  : roomType==="with-sofa"
+? "기존 소파 제거 후 AI 배치"
+
+: "AI 배치하기"}
         </button>
 
         {resultImage && (

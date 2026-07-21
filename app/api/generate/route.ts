@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import sharp from "sharp";
 import { GoogleGenAI } from "@google/genai";
 import sofas from "@/data/sofas.json";
 import materials from "@/data/materials.json";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 /**
  * 원단별 고정 프롬프트 삭제
@@ -101,15 +102,36 @@ function getImageMimeType(imagePath: string): string {
   return "image/png";
 }
 
+const SUPPORTED_ASPECT_RATIOS = [
+  { name: "1:1", value: 1 / 1 },
+  { name: "3:2", value: 3 / 2 },
+  { name: "2:3", value: 2 / 3 },
+  { name: "3:4", value: 3 / 4 },
+  { name: "4:3", value: 4 / 3 },
+  { name: "4:5", value: 4 / 5 },
+  { name: "5:4", value: 5 / 4 },
+  { name: "9:16", value: 9 / 16 },
+  { name: "16:9", value: 16 / 9 },
+  { name: "21:9", value: 21 / 9 },
+] as const;
+
+function getClosestAspectRatio(width: number, height: number): string {
+  const sourceRatio = width / height;
+
+  return SUPPORTED_ASPECT_RATIOS.reduce((closest, current) => {
+    const closestDifference = Math.abs(sourceRatio - closest.value);
+    const currentDifference = Math.abs(sourceRatio - current.value);
+
+    return currentDifference < closestDifference ? current : closest;
+  }).name;
+}
+
 function configureGoogleCredentials(projectId: string): void {
   const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
   const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
 
   if (clientEmail && privateKey) {
-    const credentialsPath = path.join(
-      "/tmp",
-      "google-credentials.json"
-    );
+    const credentialsPath = path.join("/tmp", "google-credentials.json");
 
     fs.writeFileSync(
       credentialsPath,
@@ -119,21 +141,17 @@ function configureGoogleCredentials(projectId: string): void {
         client_email: clientEmail,
         private_key: privateKey,
       }),
-      "utf-8"
+      "utf-8",
     );
 
     process.env.GOOGLE_APPLICATION_CREDENTIALS = credentialsPath;
     return;
   }
 
-  const localCredentialsPath = path.join(
-    process.cwd(),
-    "vertex-key.json"
-  );
+  const localCredentialsPath = path.join(process.cwd(), "vertex-key.json");
 
   if (fs.existsSync(localCredentialsPath)) {
-    process.env.GOOGLE_APPLICATION_CREDENTIALS =
-      localCredentialsPath;
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = localCredentialsPath;
   }
 }
 
@@ -148,7 +166,7 @@ export async function POST(req: Request) {
           success: false,
           message: "GOOGLE_CLOUD_PROJECT가 없습니다.",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -161,6 +179,7 @@ export async function POST(req: Request) {
     const materialValue = formData.get("material");
     const colorValue = formData.get("color");
     const lightingValue = formData.get("lighting");
+    const roomTypeValue = formData.get("roomType");
 
     if (!(roomValue instanceof File)) {
       return NextResponse.json(
@@ -168,7 +187,7 @@ export async function POST(req: Request) {
           success: false,
           message: "방 사진이 없습니다.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -178,28 +197,34 @@ export async function POST(req: Request) {
           success: false,
           message: "소파가 선택되지 않았습니다.",
         },
-        { status: 400 }
+        { status: 400 },
+      );
+    }
+
+    const roomType =
+      roomTypeValue === "with-sofa" || roomTypeValue === "empty-room"
+        ? roomTypeValue
+        : null;
+
+    if (!roomType) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "공간사진 유형을 먼저 선택해 주세요.",
+        },
+        { status: 400 },
       );
     }
 
     const material =
-      typeof materialValue === "string"
-        ? materialValue
-        : "original";
+      typeof materialValue === "string" ? materialValue : "original";
 
-    const color =
-      typeof colorValue === "string"
-        ? colorValue
-        : "original";
+    const color = typeof colorValue === "string" ? colorValue : "original";
 
     const lighting =
-      typeof lightingValue === "string"
-        ? lightingValue
-        : "natural";
+      typeof lightingValue === "string" ? lightingValue : "natural";
 
-    const sofa = sofas.find(
-      (item) => item.id === sofaValue
-    );
+    const sofa = sofas.find((item) => item.id === sofaValue);
 
     if (!sofa) {
       return NextResponse.json(
@@ -207,14 +232,12 @@ export async function POST(req: Request) {
           success: false,
           message: "소파 정보를 찾을 수 없습니다.",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     const selectedMaterial = materials.find(
-      (item) =>
-        item.id === material &&
-        item.active !== false
+      (item) => item.id === material && item.active !== false,
     );
 
     if (!selectedMaterial) {
@@ -223,12 +246,12 @@ export async function POST(req: Request) {
           success: false,
           message: "선택한 원단 정보를 찾을 수 없습니다.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const selectedColor = selectedMaterial.colors.find(
-      (item) => item.id === color
+      (item) => item.id === color,
     );
 
     if (!selectedColor) {
@@ -237,14 +260,14 @@ export async function POST(req: Request) {
           success: false,
           message: `${selectedMaterial.name}에서 선택할 수 없는 컬러입니다.`,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const sofaPath = path.join(
       process.cwd(),
       "public",
-      sofa.image.replace(/^\//, "")
+      sofa.image.replace(/^\//, ""),
     );
 
     if (!fs.existsSync(sofaPath)) {
@@ -253,20 +276,35 @@ export async function POST(req: Request) {
           success: false,
           message: `소파 이미지 파일이 없습니다: ${sofa.image}`,
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
-    const roomBuffer = Buffer.from(
-      await roomValue.arrayBuffer()
-    );
+    const roomBuffer = Buffer.from(await roomValue.arrayBuffer());
 
     const sofaBuffer = fs.readFileSync(sofaPath);
+
+    const roomMetadata = await sharp(roomBuffer).metadata();
+
+    const roomWidth = roomMetadata.width;
+    const roomHeight = roomMetadata.height;
+
+    if (!roomWidth || !roomHeight) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "공간 사진의 가로·세로 크기를 확인할 수 없습니다.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const outputAspectRatio = getClosestAspectRatio(roomWidth, roomHeight);
 
     const roomBase64 = roomBuffer.toString("base64");
     const sofaBase64 = sofaBuffer.toString("base64");
 
-   const geometryLockText = `
+    const geometryLockText = `
 ABSOLUTE SOFA GEOMETRY LOCK:
 
 Image 2 is the authoritative reference image of the exact sofa product.
@@ -329,10 +367,12 @@ If any instruction conflicts with preserving the exact sofa shape,
 preserving the exact sofa shape has absolute priority.
 `;
 
-const materialText = `
+    const materialText = `
 ${geometryLockText}
 
-${selectedMaterial.prompt?.trim() || `
+${
+  selectedMaterial.prompt?.trim() ||
+  `
 Apply the selected upholstery material named "${selectedMaterial.name}" realistically.
 
 Change only:
@@ -342,18 +382,22 @@ Change only:
 - reflectivity
 
 Do not change any physical sofa component.
-`}
+`
+}
 `;
 
-const colorText = `
+    const colorText = `
 ${geometryLockText}
 
-${selectedColor.prompt?.trim() || `
+${
+  selectedColor.prompt?.trim() ||
+  `
 Apply the selected color named "${selectedColor.name}" realistically.
 
 Only recolor the visible upholstery surface.
 Do not alter the sofa geometry, cushion volume, seams, or structure.
-`}
+`
+}
 `;
 
     const lightingText = getLightingPrompt(lighting);
@@ -364,10 +408,114 @@ Do not alter the sofa geometry, cushion volume, seams, or structure.
       location,
     });
 
+    const imageAspectRatio = outputAspectRatio as
+      | "1:1"
+      | "3:2"
+      | "2:3"
+      | "3:4"
+      | "4:3"
+      | "4:5"
+      | "5:4"
+      | "9:16"
+      | "16:9"
+      | "21:9";
+
+    const extractGeneratedImage = (response: any, stepName: string) => {
+      const parts = response.candidates?.[0]?.content?.parts ?? [];
+      const imagePart = parts.find((part: any) => part.inlineData?.data);
+
+      if (!imagePart?.inlineData?.data) {
+        const responseText = parts
+          .map((part: any) => part.text)
+          .filter(Boolean)
+          .join("\n");
+
+        throw new Error(
+          `${stepName} 이미지 결과가 없습니다.${
+            responseText ? ` Gemini 응답: ${responseText}` : ""
+          }`,
+        );
+      }
+
+      return {
+        data: imagePart.inlineData.data as string,
+        mimeType: imagePart.inlineData.mimeType || "image/png",
+      };
+    };
+
+    let placementRoomBase64 = roomBase64;
+    let placementRoomMimeType = roomValue.type || "image/jpeg";
+
+    if (roomType === "with-sofa") {
+      const removeExistingSofaPrompt = `
+TASK: REMOVE THE EXISTING SOFA FROM THE ROOM PHOTO.
+
+The uploaded image is the customer's real room photograph.
+Remove every existing sofa, couch, sectional, loveseat, chaise, armchair belonging to the sofa set, ottoman, sofa cushion, sofa body, sofa legs, sofa shadow, reflection, and visible sofa fragment.
+
+Restore naturally all areas hidden behind or beneath the removed sofa, including the wall, floor, baseboard, rug, window area, shadows, and background surfaces.
+
+Preserve the exact room canvas, camera angle, perspective, framing, aspect ratio, lighting, walls, floor, ceiling, windows, doors, rug, tables, lamps, curtains, cabinets, plants, decorations, and every unrelated object.
+
+Do not add a replacement sofa.
+Do not add new furniture.
+Do not add people, text, logos, borders, labels, or watermarks.
+Do not crop, zoom, reframe, redesign, or restyle the room.
+Do not leave duplicate sofas, ghost images, residual cushions, leftover shadows, or sofa fragments.
+
+The output must be the same room photograph with only the existing sofa and sofa-related pieces removed, leaving a clean, realistic, empty placement area.
+`;
+
+      const removalResponse = await ai.models.generateContent({
+        model: "gemini-2.5-flash-image",
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { text: removeExistingSofaPrompt },
+              {
+                inlineData: {
+                  mimeType: roomValue.type || "image/jpeg",
+                  data: roomBase64,
+                },
+              },
+            ],
+          },
+        ],
+        config: {
+          responseModalities: ["TEXT", "IMAGE"],
+          imageConfig: { aspectRatio: imageAspectRatio },
+        },
+      });
+
+      const cleanedRoom = extractGeneratedImage(
+        removalResponse,
+        "기존 소파 제거",
+      );
+
+      placementRoomBase64 = cleanedRoom.data;
+      placementRoomMimeType = cleanedRoom.mimeType;
+    }
+
     const imagePrompt = `
+
+OUTPUT CANVAS AND FRAMING REQUIREMENTS:
+
+Image 1 defines the exact output canvas, camera framing, and field of view.
+
+Preserve the complete visible area of Image 1.
+Do not crop, zoom, widen, shorten, or reframe the room.
+Keep the same left edge, right edge, top edge, and bottom edge.
+The final result must preserve the original room image's aspect ratio and full composition.
+
 ${geometryLockText}
 
-Image 1 is the customer's real room photograph.
+Image 1 is the room image prepared for placement.
+${
+  roomType === "with-sofa"
+    ? "The original room sofa has already been removed in a separate first step. Do not reconstruct or reuse it."
+    : "The user confirmed that this room photo has no existing sofa. Do not invent or infer an old sofa."
+}
 Image 2 is the authoritative product reference image of the exact sofa.
 
 Use Image 2 as a locked visual reference.
@@ -451,7 +599,17 @@ Room preservation and sofa replacement rules:
 - Keep the room structure unchanged.
 - Keep walls, floor, ceiling, windows, doors, and all unrelated room objects unchanged.
 - First inspect Image 1 for an existing sofa, couch, sectional, loveseat, chaise, armchair, ottoman, or sofa-related seating in the intended placement area.
-- If an existing sofa or sofa-related seating is present in the intended placement area, remove it completely before placing the selected sofa from Image 2.
+- If an existing sofa or sofa-related seating is present in the intended placement area, remove it completely before placing the selected sofa from 
+
+Never use the existing sofa in Image 1
+as the target object for material editing or color editing.
+
+The existing sofa is disposable.
+
+Only the sofa copied from Image 2
+may receive the selected material and selected color.
+
+Image 2.
 - Remove the existing sofa body, cushions, legs, shadows, reflections, and visible fragments.
 - Reconstruct the wall, floor, rug, and background naturally where the old sofa was removed.
 - Do not leave duplicate sofas, ghost images, residual cushions, leftover shadows, or sofa fragments.
@@ -469,6 +627,50 @@ Original product color: ${sofa.color || "정보 없음"}
 Width: ${sofa.width || "정보 없음"}mm
 Depth: ${sofa.depth || "정보 없음"}mm
 Height: ${sofa.height || "정보 없음"}mm
+
+
+EXECUTION ORDER (must follow exactly)
+
+Step 1.
+Analyze Image 1.
+
+Step 2.
+If a sofa already exists in Image 1,
+remove that sofa completely.
+
+Do not edit its material.
+Do not edit its color.
+Do not edit its shape.
+
+Erase it completely.
+
+Step 3.
+Restore the wall,
+floor,
+rug,
+window,
+and background.
+
+Step 4.
+Place the exact sofa from Image 2.
+
+The sofa from Image 2 becomes the only sofa in the room.
+
+Step 5.
+After the sofa from Image 2 has already been placed,
+apply the selected upholstery material.
+
+Never apply the material to the sofa originally visible in Image 1.
+
+Step 6.
+After the material has been applied,
+apply the selected upholstery color.
+
+Never recolor the sofa originally visible in Image 1.
+
+The selected material and color must always be applied
+to the sofa copied from Image 2.
+
 
 Final priority order:
 1. Preserve the exact sofa geometry, silhouette, construction, proportions, cushion arrangement, seams, and product identity from Image 2.
@@ -493,9 +695,8 @@ When uncertain, preserve the original product image more literally rather than c
             },
             {
               inlineData: {
-                mimeType:
-                  roomValue.type || "image/jpeg",
-                data: roomBase64,
+                mimeType: placementRoomMimeType,
+                data: placementRoomBase64,
               },
             },
             {
@@ -509,15 +710,15 @@ When uncertain, preserve the original product image more literally rather than c
       ],
       config: {
         responseModalities: ["TEXT", "IMAGE"],
+        imageConfig: {
+          aspectRatio: imageAspectRatio,
+        },
       },
     });
 
-    const imageParts =
-      imageResponse.candidates?.[0]?.content?.parts ?? [];
+    const imageParts = imageResponse.candidates?.[0]?.content?.parts ?? [];
 
-    const imagePart = imageParts.find(
-      (part: any) => part.inlineData?.data
-    );
+    const imagePart = imageParts.find((part: any) => part.inlineData?.data);
 
     if (!imagePart?.inlineData?.data) {
       const responseText = imageParts
@@ -531,15 +732,34 @@ When uncertain, preserve the original product image more literally rather than c
           message: "Gemini 이미지 결과가 없습니다.",
           text: responseText,
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
-    const resultImageBase64 =
-      imagePart.inlineData.data;
+    const generatedImageBuffer = Buffer.from(
+      imagePart.inlineData.data,
+      "base64",
+    );
 
-    const resultMimeType =
-      imagePart.inlineData.mimeType || "image/png";
+    const resizedResultBuffer = await sharp(generatedImageBuffer)
+      .resize({
+        width: roomWidth,
+        height: roomHeight,
+        fit: "contain",
+        position: "centre",
+        background: {
+          r: 245,
+          g: 245,
+          b: 245,
+          alpha: 1,
+        },
+      })
+      .png()
+      .toBuffer();
+
+    const resultImageBase64 = resizedResultBuffer.toString("base64");
+
+    const resultMimeType = "image/png";
 
     const advicePrompt = `
 You are an interior styling expert for a Korean premium sofa brand called 케이하우스홀드.
@@ -577,26 +797,25 @@ Writing rules:
     let advice = "";
 
     try {
-      const adviceResponse =
-        await ai.models.generateContent({
-          model: "gemini-2.5-flash",
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: advicePrompt,
+      const adviceResponse = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: advicePrompt,
+              },
+              {
+                inlineData: {
+                  mimeType: resultMimeType,
+                  data: resultImageBase64,
                 },
-                {
-                  inlineData: {
-                    mimeType: resultMimeType,
-                    data: resultImageBase64,
-                  },
-                },
-              ],
-            },
-          ],
-        });
+              },
+            ],
+          },
+        ],
+      });
 
       advice =
         adviceResponse.candidates?.[0]?.content?.parts
@@ -604,10 +823,7 @@ Writing rules:
           .filter(Boolean)
           .join("\n") || "";
     } catch (adviceError) {
-      console.error(
-        "ADVICE GENERATION ERROR:",
-        adviceError
-      );
+      console.error("ADVICE GENERATION ERROR:", adviceError);
 
       advice = "";
     }
@@ -624,12 +840,9 @@ Writing rules:
       {
         success: false,
         message: "Vertex Gemini 이미지 생성 오류",
-        error:
-          error instanceof Error
-            ? error.message
-            : String(error),
+        error: error instanceof Error ? error.message : String(error),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
