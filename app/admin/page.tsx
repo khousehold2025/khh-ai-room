@@ -184,13 +184,22 @@ export default function AdminHomePage() {
 </Link>
 
 
-          <div className="rounded-2xl bg-white p-7 opacity-60 shadow">
-            <p className="text-sm font-semibold text-gray-500">HISTORY</p>
-            <h2 className="mt-3 text-2xl font-bold">생성 이력</h2>
-            <p className="mt-3 leading-7 text-gray-600">
-              추후 회원별 AI 이미지 생성 이력을 확인합니다.
-            </p>
-          </div>
+        <Link
+  href="/admin/history"
+  className="rounded-2xl bg-white p-7 shadow transition hover:-translate-y-1 hover:shadow-lg"
+>
+  <p className="text-sm font-semibold text-gray-500">HISTORY</p>
+
+  <h2 className="mt-3 text-2xl font-bold">
+    생성 이력
+  </h2>
+
+  <p className="mt-3 leading-7 text-gray-600">
+    공개 AI Room의 방문자, 생성 횟수와
+    소파·원단·컬러 선택 내역을 확인합니다.
+  </p>
+</Link>
+
         </section>
 
         <section className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-6">

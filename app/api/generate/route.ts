@@ -5,6 +5,7 @@ import sharp from "sharp";
 import { GoogleGenAI } from "@google/genai";
 import sofas from "@/data/sofas.json";
 import materials from "@/data/materials.json";
+import { db } from "@/lib/firebaseAdmin";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -156,6 +157,8 @@ function configureGoogleCredentials(projectId: string): void {
 }
 
 export async function POST(req: Request) {
+  let reservedVisitorId: string | null = null;
+
   try {
     const projectId = process.env.GOOGLE_CLOUD_PROJECT;
     const location = process.env.GOOGLE_CLOUD_LOCATION || "global";
@@ -180,6 +183,69 @@ export async function POST(req: Request) {
     const colorValue = formData.get("color");
     const lightingValue = formData.get("lighting");
     const roomTypeValue = formData.get("roomType");
+
+// ★ 사용자 구분
+const visitorIdValue = formData.get("visitorId");
+const memberIdValue = formData.get("memberId");
+
+// ★ 공개 사용자 서버측 사용 가능 여부 확인
+if (
+  typeof visitorIdValue === "string" &&
+  visitorIdValue.trim() &&
+  !memberIdValue
+) {
+  const visitorId = visitorIdValue.trim();
+
+  const visitorRef = db
+    .collection("aiRoomVisitors")
+    .doc(visitorId);
+
+  const visitorDoc = await visitorRef.get();
+
+  if (!visitorDoc.exists) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "사용자 정보를 확인할 수 없습니다.",
+      },
+      { status: 403 },
+    );
+  }
+
+  const visitorData = visitorDoc.data() || {};
+
+  const usageCount =
+    typeof visitorData.usageCount === "number"
+      ? visitorData.usageCount
+      : 0;
+
+  const limit =
+    typeof visitorData.limit === "number"
+      ? visitorData.limit
+      : 10;
+
+  const active = visitorData.active !== false;
+
+  if (!active) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "현재 AI Room을 이용할 수 없습니다.",
+      },
+      { status: 403 },
+    );
+  }
+
+  if (usageCount >= limit) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "무료 AI 생성 횟수를 모두 사용했습니다.",
+      },
+      { status: 403 },
+    );
+  }
+}
 
     if (!(roomValue instanceof File)) {
       return NextResponse.json(
@@ -300,6 +366,55 @@ export async function POST(req: Request) {
     }
 
     const outputAspectRatio = getClosestAspectRatio(roomWidth, roomHeight);
+
+// 공개 사용자 1회 서버측 예약
+if (
+  typeof visitorIdValue === "string" &&
+  visitorIdValue.trim() &&
+  !memberIdValue
+) {
+  const visitorId = visitorIdValue.trim();
+
+  const visitorRef = db
+    .collection("aiRoomVisitors")
+    .doc(visitorId);
+
+  await db.runTransaction(async (transaction) => {
+    const visitorDoc = await transaction.get(visitorRef);
+
+    if (!visitorDoc.exists) {
+      throw new Error("PUBLIC_VISITOR_NOT_FOUND");
+    }
+
+    const data = visitorDoc.data() || {};
+
+    const usageCount =
+      typeof data.usageCount === "number"
+        ? data.usageCount
+        : 0;
+
+    const limit =
+      typeof data.limit === "number"
+        ? data.limit
+        : 10;
+
+    const active = data.active !== false;
+
+    if (!active) {
+      throw new Error("PUBLIC_VISITOR_BLOCKED");
+    }
+
+    if (usageCount >= limit) {
+      throw new Error("PUBLIC_LIMIT_EXCEEDED");
+    }
+
+    transaction.update(visitorRef, {
+      usageCount: usageCount + 1,
+    });
+  });
+
+  reservedVisitorId = visitorId;
+}
 
     const roomBase64 = roomBuffer.toString("base64");
     const sofaBase64 = sofaBuffer.toString("base64");
@@ -833,16 +948,91 @@ Writing rules:
       image: `data:${resultMimeType};base64,${resultImageBase64}`,
       advice,
     });
-  } catch (error: unknown) {
-    console.error("VERTEX GEMINI ERROR:", error);
+} catch (error: unknown) {
+  // 공개 사용자 예약 횟수 복구
+  if (reservedVisitorId) {
+    try {
+      const visitorRef = db
+        .collection("aiRoomVisitors")
+        .doc(reservedVisitorId);
 
+      await db.runTransaction(async (transaction) => {
+        const visitorDoc = await transaction.get(visitorRef);
+
+        if (!visitorDoc.exists) {
+          return;
+        }
+
+        const data = visitorDoc.data() || {};
+
+        const usageCount =
+          typeof data.usageCount === "number"
+            ? data.usageCount
+            : 0;
+
+        transaction.update(visitorRef, {
+          usageCount: Math.max(usageCount - 1, 0),
+        });
+      });
+    } catch (rollbackError) {
+      console.error(
+        "PUBLIC USAGE ROLLBACK ERROR:",
+        rollbackError
+      );
+    }
+  }
+
+  if (
+    error instanceof Error &&
+    error.message === "PUBLIC_LIMIT_EXCEEDED"
+  ) {
     return NextResponse.json(
       {
         success: false,
-        message: "Vertex Gemini 이미지 생성 오류",
-        error: error instanceof Error ? error.message : String(error),
+        message: "무료 AI 생성 횟수를 모두 사용했습니다.",
       },
-      { status: 500 },
+      { status: 403 }
     );
   }
+
+  if (
+    error instanceof Error &&
+    error.message === "PUBLIC_VISITOR_BLOCKED"
+  ) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "현재 AI Room을 이용할 수 없습니다.",
+      },
+      { status: 403 }
+    );
+  }
+
+  if (
+    error instanceof Error &&
+    error.message === "PUBLIC_VISITOR_NOT_FOUND"
+  ) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "사용자 정보를 확인할 수 없습니다.",
+      },
+      { status: 403 }
+    );
+  }
+
+  console.error("VERTEX GEMINI ERROR:", error);
+
+  return NextResponse.json(
+    {
+      success: false,
+      message: "Vertex Gemini 이미지 생성 오류",
+      error:
+        error instanceof Error
+          ? error.message
+          : String(error),
+    },
+    { status: 500 }
+  );
+}
 }

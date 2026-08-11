@@ -1,5 +1,6 @@
 "use client";
 import { useMember } from "@/hooks/useMember";
+import { useVisitor } from "@/hooks/useVisitor";
 import { useEffect, useMemo, useState } from "react";
 import UploadPanel from "@/components/UploadPanel";
 import SofaGrid from "@/components/SofaGrid";
@@ -23,8 +24,19 @@ const {
   decreaseRemain,
 } = useMember(isMemberMode);
 
+const {
+  visitorId,
+  usageCount: visitorUsageCount,
+  limit: visitorLimit,
+  remain: visitorRemain,
+  active: visitorActive,
+  visitorLoading,
+  refreshVisitor,
+} = useVisitor(!isMemberMode);
+
   const [selectedSofa, setSelectedSofa] = useState("");
   const [roomImage, setRoomImage] = useState<File | null>(null);
+
 
 const [roomType, setRoomType] = useState<
   "with-sofa" | "empty-room" | null
@@ -250,85 +262,199 @@ const colorName =
     }
   };
 
-  const handleGenerate = async () => {
-    if (isMemberMode && remain <= 0) {
-      alert("AI 이미지 생성 가능 횟수를 모두 사용했습니다.");
+
+const decreaseVisitorRemain = async () => {
+  if (!visitorId) {
+    return false;
+  }
+
+  try {
+    const response = await fetch("/api/public-room/use", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        visitorId,
+      }),
+    });
+
+    const json = await response.json();
+
+    if (!response.ok || !json.success) {
+      console.error("공개 사용자 횟수 차감 실패:", json);
+
+      if (json.code === "LIMIT_EXCEEDED") {
+        alert("무료 AI 생성 횟수 10회를 모두 사용했습니다.");
+      } else if (json.code === "VISITOR_BLOCKED") {
+        alert("현재 AI Room을 이용할 수 없습니다.");
+      }
+
+      return false;
+    }
+
+    await refreshVisitor();
+
+    return true;
+  } catch (error) {
+    console.error("공개 사용자 횟수 차감 오류:", error);
+    return false;
+  }
+};
+
+
+const saveGenerationLog = async () => {
+  if (isMemberMode || !visitorId) {
+    return;
+  }
+
+  try {
+    await fetch("/api/public-room/generation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        visitorId,
+        sofaId: selectedSofa,
+        material,
+        color,
+        lighting,
+        roomType,
+        success: true,
+      }),
+    });
+  } catch (error) {
+    console.error("생성 이력 저장 오류:", error);
+  }
+};
+
+
+const handleGenerate = async () => {
+  // 기존 회원용 횟수 검사
+  if (isMemberMode && remain <= 0) {
+    alert("AI 이미지 생성 가능 횟수를 모두 사용했습니다.");
+    return;
+  }
+
+  // 공개 사용자용 횟수 검사
+  if (!isMemberMode) {
+    if (visitorLoading) {
+      alert("사용 가능 횟수를 확인하고 있습니다. 잠시 후 다시 시도해주세요.");
       return;
     }
 
-if (!roomType) {
+    if (!visitorActive) {
+      alert("현재 AI Room을 이용할 수 없습니다.");
+      return;
+    }
+
+    if (visitorRemain <= 0) {
+      alert("무료 AI 생성 횟수 10회를 모두 사용했습니다.");
+      return;
+    }
+  }
+
+  // 공간사진 유형 확인
+  if (!roomType) {
     alert("공간사진 유형을 선택하세요.");
     return;
+  }
+
+  // 공간사진 확인
+  if (!roomImage) {
+    alert("방 사진을 선택하세요.");
+    return;
+  }
+
+  // 소파 선택 확인
+  if (!selectedSofa) {
+    alert("소파를 선택하세요.");
+    return;
+  }
+
+  try {
+    setLoading(true);
+    setGenerationComplete(false);
+    setResultImage(null);
+    setAdvice("");
+
+    const formData = new FormData();
+    formData.append("room", roomImage);
+    formData.append("roomType", roomType);
+    formData.append("sofa", selectedSofa);
+    formData.append("material", material);
+    formData.append("color", color);
+    formData.append("lighting", lighting);
+
+// ★ 공개 사용자일 경우 Visitor ID 전달
+if (!isMemberMode) {
+  formData.append("visitorId", visitorId);
 }
 
-    if (!roomImage) {
-      alert("방 사진을 선택하세요.");
+    // 기존 회원용 정보
+    if (isMemberMode) {
+      formData.append("memberId", memberId);
+      formData.append("memberName", memberName);
+    }
+
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      body: formData,
+    });
+
+    const json = await res.json();
+
+    // AI 생성 실패
+    if (!res.ok || !json.success) {
+      alert(`${json.message || "API 실패"}\n\n${json.error || ""}`);
       return;
     }
 
-    if (!selectedSofa) {
-      alert("소파를 선택하세요.");
-      return;
+    // AI 생성 성공
+    setResultImage(json.image);
+    setAdvice(json.advice || "");
+    setGenerationComplete(true);
+
+    if (isMemberMode) {
+      // 기존 회원용 차감
+      await decreaseRemain();
+
+      setTimeout(() => {
+        setGenerationComplete(false);
+      }, 30000);
+    } else {
+
+  // 서버에서 이미 1회 차감했으므로 최신 정보만 다시 조회
+  await refreshVisitor();
+
+  // 생성 이력 저장
+  await saveGenerationLog();
+
+  // 기존 30초 쿨다운
+  setCooldown(30);
     }
+  } catch (err) {
+    console.error(err);
+    alert("오류가 발생했습니다.");
+  } finally {
+    setLoading(false);
+  }
+};
 
-    try {
-      setLoading(true);
-setGenerationComplete(false);
-      setResultImage(null);
-      setAdvice("");
-
-      const formData = new FormData();
-      formData.append("room", roomImage);
-formData.append("roomType", roomType);
-      formData.append("sofa", selectedSofa);
-      formData.append("material", material);
-      formData.append("color", color);
-      formData.append("lighting", lighting);
-
-      if (isMemberMode) {
-        formData.append("memberId", memberId);
-        formData.append("memberName", memberName);
-      }
-
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        body: formData,
-      });
-
-      const json = await res.json();
-
-      if (!res.ok || !json.success) {
-        alert(`${json.message || "API 실패"}\n\n${json.error || ""}`);
-        return;
-      }
-
-      setResultImage(json.image);
-      setAdvice(json.advice || "");
-setGenerationComplete(true);
-
-      if (isMemberMode) {
-        await decreaseRemain();
-
- setTimeout(() => {
-    setGenerationComplete(false);
-  }, 30000);
-      } else {
-        setCooldown(30);
-      }
-    } catch (err) {
-      console.error(err);
-      alert("오류가 발생했습니다.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
- const isDisabled =
+const isDisabled =
   loading ||
-!roomType ||
+  !roomType ||
   !preview ||
   !selectedSofa ||
+
+  // 공개 사용자
+  (!isMemberMode && visitorLoading) ||
+  (!isMemberMode && !visitorActive) ||
+  (!isMemberMode && visitorRemain <= 0) ||
   (!isMemberMode && cooldown > 0) ||
+
+  // 기존 회원
   (isMemberMode && remain <= 0) ||
   (isMemberMode && !active);
 
@@ -348,6 +474,35 @@ setGenerationComplete(true);
               : "내 공간에 케이하우스홀드 소파를 배치해보세요."}
           </p>
         </div>
+
+
+{!isMemberMode && (
+  <div className="mt-8 rounded-xl bg-white p-6 shadow">
+    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 className="text-xl font-bold">
+          무료 AI 소파 배치 체험
+        </h2>
+
+        <p className="mt-2 text-sm text-gray-500">
+          원하는 소파를 내 공간에 직접 배치해보세요.
+        </p>
+      </div>
+
+      <div className="rounded-xl bg-gray-100 px-6 py-4 text-center">
+        <p className="text-sm text-gray-500">
+          남은 AI 생성 횟수
+        </p>
+
+        <p className="mt-1 text-3xl font-bold">
+          {visitorLoading
+            ? "..."
+            : `${visitorRemain} / ${visitorLimit}`}
+        </p>
+      </div>
+    </div>
+  </div>
+)}
 
         {isMemberMode && (
           <div className="mt-8 rounded-xl bg-white p-6 shadow">
