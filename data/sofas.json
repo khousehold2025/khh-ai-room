@@ -247,5 +247,27 @@
     "height": 930,
     "image": "/sofas/mexxo_4p_camel.png",
     "active": true
+  },
+  {
+    "id": "horizon_3p_camel",
+    "name": "호리즌",
+    "size": "3인용",
+    "color": "카멜",
+    "width": 2320,
+    "depth": 1170,
+    "height": 1050,
+    "image": "/sofas/horizon_3p_camel.png",
+    "active": true
+  },
+  {
+    "id": "horizon_4p_camel",
+    "name": "호리즌",
+    "size": "4인용",
+    "color": "카멜",
+    "width": 3160,
+    "depth": 1170,
+    "height": 1050,
+    "image": "/sofas/horizon_4p_camel.png",
+    "active": true
   }
 ]
